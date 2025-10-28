@@ -366,8 +366,9 @@ export class QuarksPrefab extends Group implements IPrefab {
     toJSON(): any {
         const json = super.toJSON();
         
-        // Add animations data
-        json.object.animationData = this.animationData.map(anim => ({
+        // Add animations data. Put custom payload in userData to avoid collisions
+        // with Three.js's typed JSON schema (which may include `animations`).
+        (json.object.userData as any).animationData = this.animationData.map(anim => ({
             startTime: anim.startTime,
             duration: anim.duration,
             type: anim.type,
