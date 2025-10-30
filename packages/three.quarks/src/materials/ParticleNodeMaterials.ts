@@ -220,14 +220,11 @@ export class ParticleBillboardNodeMaterial extends SpriteNodeMaterial {
         // Define tiling properties
         this.uTileCount = parameters?.uTileCount || 1;
         this.vTileCount = parameters?.vTileCount || 1;
-        this.blendTiles = parameters?.blendTiles || false;
-
-        if (debug) {
-            this.colorNode = vec4(uv(), 0.0, 1.0);
-        }
+        this.blendTiles = parameters?.blendTiles || !false;
 
         this.positionNode = attribute('offset', 'vec3');
         this.scaleNode = vec2(attribute('size', 'vec3').xy);
+        debugger;
 
         // Tiling logic
         const tilingColorNode = getTilingColorNode(parameters, debug);
@@ -236,6 +233,12 @@ export class ParticleBillboardNodeMaterial extends SpriteNodeMaterial {
             this.colorNode = tilingColorNode.mul(instanceColor);
         } else if (parameters?.colorNode) {
             this.colorNode = parameters.colorNode.mul(instanceColor);
+        } else if (this.map && this.map.isTexture === true) {
+            this.colorNode = texture(this.map).mul(instanceColor);
+        }
+
+        if (debug) {
+            this.colorNode = vec4(uv(), 0.0, 1.0);
         }
 
         if (parameters?.softParticles) {
