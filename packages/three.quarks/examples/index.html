@@ -18,7 +18,8 @@
     <script type="importmap">
         {
           "imports": {
-            "three": "./js/three.module.js",
+            "three": "./js/three.webgpu.js",
+            "three/webgpu": "./js/three.webgpu.js",
             "quarks.core": "./js/quarks.core.esm.js",
             "three.quarks": "./js/three.quarks.esm.js",
             "three/examples/": "./js/examples/"
@@ -75,8 +76,9 @@
         import {
             Clock,
             PerspectiveCamera,
-            WebGLRenderer,
-        } from "three";
+            // WebGLRenderer,
+            WebGPURenderer
+        } from "three/webgpu";
         import Stats from "./js/Stats.min.js";
         import {
             MuzzleFlashDemo,
@@ -169,7 +171,7 @@
 
             container = document.getElementById('home');
             let canvas = document.getElementById('renderer-canvas');
-            renderer = new WebGLRenderer({canvas: canvas});
+            renderer = new WebGPURenderer({canvas: canvas, forceWebGL: true});
 
             let width = container.width;
             let height = container.height;

@@ -20,7 +20,7 @@ const banner = `/**
  */`;
 
 const production = process.env.NODE_ENV === 'production';
-const globals = {three: 'THREE', 'three.quarks': 'THREE.QUARKS'};
+const globals = {'three/webgpu': 'THREE', 'three.quarks': 'THREE.QUARKS'};
 const extensions = ['.js', '.jsx', '.ts', '.tsx'];
 
 function wgslPlugin() {
@@ -40,7 +40,7 @@ function wgslPlugin() {
 export const lib = {
     main: {
         input: './src/index.ts',
-        external: ['three', 'quarks.core'],
+        external: ['three/webgpu', 'quarks.core'],
         plugins: [
             //wgslPlugin(),
             nodeResolve({

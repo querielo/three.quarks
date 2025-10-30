@@ -17,6 +17,15 @@ import {
     Quaternion,
     Matrix3,
     SpriteParticle, StretchedBillBoardSettings} from 'quarks.core';
+import {
+    ParticleSpriteNodeMaterial,
+    ParticleHorizontalBillboardNodeMaterial,
+    ParticleVerticalBillboardNodeMaterial,
+    ParticleStretchedBillboardNodeMaterial,
+    ParticleMeshNodeMaterial,
+    ParticleMeshStandardNodeMaterial,
+    ParticleMeshPhysicalNodeMaterial,
+} from './materials/ParticleNodeMaterials';
 import particle_frag from './shaders/particle_frag.glsl';
 import particle_physics_frag from './shaders/particle_physics_frag.glsl';
 import particle_vert from './shaders/particle_vert.glsl';
@@ -27,6 +36,7 @@ import {getMaterialUVChannelName} from './util/ThreeUtil';
 import {VFXBatchSettings} from './BatchedRenderer';
 import {RenderMode, VFXBatch} from './VFXBatch';
 import {ParticleMeshPhysicsMaterial, ParticleMeshStandardMaterial} from './materials/ParticleMaterials';
+import { color } from 'three/tsl';
 
 /**
  * A VFX batch that render sprites in a batch.
@@ -170,6 +180,27 @@ export class SpriteBatch extends VFXBatch {
             };
         }
 
+        const baseOptions = {
+            transparent: this.settings.material.transparent,
+            depthWrite: !this.settings.material.transparent,
+            blending: this.settings.material.blending,
+            blendDst: this.settings.material.blendDst,
+            blendSrc: this.settings.material.blendSrc,
+            blendEquation: this.settings.material.blendEquation,
+            premultipliedAlpha: this.settings.material.premultipliedAlpha,
+            side: this.settings.material.side,
+            alphaTest: this.settings.material.alphaTest,
+            depthTest: this.settings.material.depthTest,
+            uTileCount: this.settings.uTileCount,
+            vTileCount: this.settings.vTileCount,
+            blendTiles: this.settings.blendTiles,
+            softParticles: this.settings.softParticles,
+            map: (this.settings.material as any).map,
+            color: (this.settings.material as any).color,
+            colorNode: (this.settings.material as any).colorNode
+        };
+        const filteredOptions = Object.fromEntries(Object.entries(baseOptions).filter(([_, v]) => v !== undefined));
+
         let needLights = false;
         if (
             this.settings.renderMode === RenderMode.BillBoard ||
@@ -204,61 +235,49 @@ export class SpriteBatch extends VFXBatch {
 
             let specialMats = false;
             if (this.settings.renderMode === RenderMode.Mesh) {
-                //const mat = this.settings.material as MeshStandardMaterial;
                 if (this.settings.material.type === 'MeshStandardMaterial') {
-                    this.material = new ParticleMeshStandardMaterial({});
-                    this.material.copy(this.settings.material as MeshStandardMaterial);
-                    (this.material as any).uniforms = uniforms;
-                    (this.material as any).defines = defines;
+                    const options: any = {};
+                    if ((this.settings.material as any).colorNode !== undefined) {
+                        options.colorNode = (this.settings.material as any).colorNode;
+                    }
+                    this.material = new ParticleMeshStandardNodeMaterial(options);
+                    this.material.setValues(this.settings.material as MeshStandardMaterial);
+                    // (this.material as any).uniforms = uniforms;
+                    // (this.material as any).defines = defines;
+                    // this.material = this.settings.material;
                     specialMats = true;
                 } else if (this.settings.material.type === 'MeshPhysicalMaterial') {
-                    this.material = new ParticleMeshPhysicsMaterial({});
-                    this.material.copy(this.settings.material as MeshPhysicalMaterial);
-                    (this.material as any).uniforms = uniforms;
-                    (this.material as any).defines = defines;
+                    const options: any = {};
+                    if ((this.settings.material as any).colorNode !== undefined) {
+                        options.colorNode = (this.settings.material as any).colorNode;
+                    }
+                    this.material = new ParticleMeshPhysicalNodeMaterial(options);
+                    this.material.setValues(this.settings.material as MeshPhysicalMaterial);
+                    // (this.material as any).uniforms = uniforms;
+                    // (this.material as any).defines = defines;
                     specialMats = true;
                 }
             }
             if (!specialMats) {
-                this.material = new ShaderMaterial({
-                    uniforms: uniforms,
-                    defines: defines,
-                    vertexShader: vertexShader,
-                    fragmentShader: fragmentShader,
-                    transparent: this.settings.material.transparent,
-                    depthWrite: !this.settings.material.transparent,
-                    blending: this.settings.material.blending,
-                    blendDst: this.settings.material.blendDst,
-                    blendSrc: this.settings.material.blendSrc,
-                    blendEquation: this.settings.material.blendEquation,
-                    premultipliedAlpha: this.settings.material.premultipliedAlpha,
-                    side: this.settings.material.side,
-                    alphaTest: this.settings.material.alphaTest,
-                    depthTest: this.settings.material.depthTest,
-                    lights: needLights,
-                });
+                // Use NodeMaterials for WebGPU compatibility
+                if (this.settings.renderMode === RenderMode.BillBoard) {
+                    this.material = new ParticleSpriteNodeMaterial(filteredOptions);
+                } else if (this.settings.renderMode === RenderMode.HorizontalBillBoard) {
+                    this.material = new ParticleHorizontalBillboardNodeMaterial(filteredOptions);
+                } else if (this.settings.renderMode === RenderMode.VerticalBillBoard) {
+                    this.material = new ParticleVerticalBillboardNodeMaterial(filteredOptions);
+                } else {
+                    // Use NodeMaterial for WebGPU compatibility
+                    this.material = new ParticleMeshNodeMaterial(filteredOptions);
+                }
             }
         } else if (this.settings.renderMode === RenderMode.StretchedBillBoard) {
-            uniforms['speedFactor'] = new Uniform(1.0);
-            this.material = new ShaderMaterial({
-                uniforms: uniforms,
-                defines: defines,
-                vertexShader: stretched_bb_particle_vert,
-                fragmentShader: particle_frag,
-                transparent: this.settings.material.transparent,
-                depthWrite: !this.settings.material.transparent,
-                blending: this.settings.material.blending,
-                blendDst: this.settings.material.blendDst,
-                blendSrc: this.settings.material.blendSrc,
-                blendEquation: this.settings.material.blendEquation,
-                premultipliedAlpha: this.settings.material.premultipliedAlpha,
-                side: this.settings.material.side,
-                alphaTest: this.settings.material.alphaTest,
-                depthTest: this.settings.material.depthTest,
-            });
+            // Use NodeMaterial for WebGPU compatibility
+            this.material = new ParticleStretchedBillboardNodeMaterial(filteredOptions);
         } else {
             throw new Error('render mode unavailable');
         }
+        console.log(this.material);
         if (this.material && onBeforeRender) {
             (this.material as any).onBeforeRender = onBeforeRender;
         }

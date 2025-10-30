@@ -94,11 +94,14 @@ export abstract class VFXBatch extends Mesh {
     }
 
     applyDepthTexture(depthTexture: Texture | null): void {
-        const uniform = (this.material as ShaderMaterial).uniforms['depthTexture'];
-        if (uniform) {
-            if (uniform.value !== depthTexture) {
-                uniform.value = depthTexture;
-                (this.material as ShaderMaterial).needsUpdate = true;
+        const mat = this.material as any;
+        if (mat.depthTexture) {
+            mat.depthTexture.value = depthTexture;
+            mat.needsUpdate = true;
+        } else if (mat.uniforms && mat.uniforms['depthTexture']) {
+            if (mat.uniforms['depthTexture'].value !== depthTexture) {
+                mat.uniforms['depthTexture'].value = depthTexture;
+                mat.needsUpdate = true;
             }
         }
     }
