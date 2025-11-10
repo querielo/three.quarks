@@ -224,7 +224,6 @@ export class ParticleBillboardNodeMaterial extends SpriteNodeMaterial {
 
         this.positionNode = attribute('offset', 'vec3');
         this.scaleNode = vec2(attribute('size', 'vec3').xy);
-        debugger;
 
         // Tiling logic
         const tilingColorNode = getTilingColorNode(parameters, debug);
