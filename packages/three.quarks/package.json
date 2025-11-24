@@ -1,6 +1,6 @@
 {
   "name": "@querielo/three.quarks",
-  "version": "0.17.3",
+  "version": "0.17.4",
   "description": "A General-Purpose Particle System for three.js",
   "type": "module",
   "types": "./dist/types/index.d.ts",
@@ -22,6 +22,7 @@
   "scripts": {
     "type-check": "tsc --noEmit",
     "type-check:watch": "npm run type-check -- --watch",
+    "clean": "rimraf dist tsconfig.tsbuildinfo",
     "dev": "rollup -c -w",
     "build:types": "tsc --emitDeclarationOnly",
     "build:js": "rollup -c",
