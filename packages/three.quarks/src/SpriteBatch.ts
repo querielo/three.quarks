@@ -241,7 +241,15 @@ export class SpriteBatch extends VFXBatch {
                         options.colorNode = (this.settings.material as any).colorNode;
                     }
                     this.material = new ParticleMeshStandardNodeMaterial(options);
-                    this.material.setValues(this.settings.material as MeshStandardMaterial);
+                    const validParams = {};
+                    for (const key in this.settings.material) {
+                        if ((this.material as any)[key] == undefined) {
+                            console.log( `[SpriteBatch]: '${ key }' is not a property of THREE.${ this.type }.` );
+                        } else {
+                            (validParams as any)[key] = (this.settings.material as any)[key];
+                        }
+                    }
+                    this.material.setValues(validParams);
                     // (this.material as any).uniforms = uniforms;
                     // (this.material as any).defines = defines;
                     // this.material = this.settings.material;
@@ -252,7 +260,15 @@ export class SpriteBatch extends VFXBatch {
                         options.colorNode = (this.settings.material as any).colorNode;
                     }
                     this.material = new ParticleMeshPhysicalNodeMaterial(options);
-                    this.material.setValues(this.settings.material as MeshPhysicalMaterial);
+                    const validParams = {};
+                    for (const key in this.settings.material) {
+                        if ((this.material as any)[key] === undefined) {
+                            console.log( `[SpriteBatch]: '${ key }' is not a property of THREE.${ this.type }.` );
+                        } else {
+                            (validParams as any)[key] = (this.settings.material as any)[key];
+                        }
+                    }
+                    this.material.setValues(validParams);
                     // (this.material as any).uniforms = uniforms;
                     // (this.material as any).defines = defines;
                     specialMats = true;
