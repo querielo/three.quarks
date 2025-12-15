@@ -114,10 +114,10 @@ export class RectangleEmitter implements EmitterShape {
         p.velocity.z = 0;
         p.velocity.normalize().multiplyScalar(p.startSpeed);
 
-        if (p.rotation instanceof Quaternion) {
-            this._m1.lookAt(ZERO_VEC3, p.velocity, UP_VEC3);
-            p.rotation.setFromRotationMatrix(this._m1);
-        }
+        // if (p.rotation instanceof Quaternion) {
+        //     this._m1.lookAt(ZERO_VEC3, p.velocity, UP_VEC3);
+        //     p.rotation.setFromRotationMatrix(this._m1);
+        // }
     }
 
     toJSON(): ShapeJSON {
