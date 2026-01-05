@@ -1,6 +1,6 @@
 {
   "name": "@querielo/three.quarks",
-  "version": "0.17.9",
+  "version": "0.17.10",
   "description": "A General-Purpose Particle System for three.js",
   "type": "module",
   "types": "./dist/types/index.d.ts",
