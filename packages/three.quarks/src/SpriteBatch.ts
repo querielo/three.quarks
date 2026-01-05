@@ -191,10 +191,10 @@ export class SpriteBatch extends VFXBatch {
             side: this.settings.material.side,
             alphaTest: this.settings.material.alphaTest,
             depthTest: this.settings.material.depthTest,
-            // uTileCount: this.settings.uTileCount,
-            // vTileCount: this.settings.vTileCount,
-            // blendTiles: this.settings.blendTiles,
-            // softParticles: this.settings.softParticles,
+            uTileCount: this.settings.uTileCount,
+            vTileCount: this.settings.vTileCount,
+            blendTiles: this.settings.blendTiles,
+            softParticles: this.settings.softParticles,
             map: (this.settings.material as any).map,
             color: (this.settings.material as any).color,
             colorNode: (this.settings.material as any).colorNode
@@ -293,7 +293,7 @@ export class SpriteBatch extends VFXBatch {
         } else {
             throw new Error('render mode unavailable');
         }
-        console.log(this.material);
+
         if (this.material && onBeforeRender) {
             (this.material as any).onBeforeRender = onBeforeRender;
         }

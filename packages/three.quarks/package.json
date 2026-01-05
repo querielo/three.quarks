@@ -1,6 +1,6 @@
 {
   "name": "@querielo/three.quarks",
-  "version": "0.17.7",
+  "version": "0.17.9",
   "description": "A General-Purpose Particle System for three.js",
   "type": "module",
   "types": "./dist/types/index.d.ts",
@@ -31,7 +31,7 @@
     "yalc:publish": "node -e \"const os = require('os'); const { execSync } = require('child_process'); const homedir = os.homedir(); execSync(`yalc publish --store-folder ${homedir}/.yalc`, {stdio: 'inherit'});\"",
     "build": "npm run build:production",
     "lint": "eslint . --ext .ts",
-    "example": "http-server ./examples -c-1 -p 8000",
+    "example": "http-server ./examples -c-1 -p 8005",
     "test": "jest",
     "test:coverage": "jest --coverage",
     "test:prod": "npm run test -- --no-cache",

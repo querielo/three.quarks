@@ -134,6 +134,50 @@ const setupParticleMeshNodes = (material: NodeMaterial) => {
     })();
 };
 
+const setMaterialValues = ( material: any, values: any ) => {
+
+    if ( values === undefined ) return;
+
+    for ( const key in values ) {
+
+        const newValue = values[ key ];
+
+        // if ( newValue === undefined ) {
+
+        //     console.warn( `THREE.Material: parameter '${ key }' has value of undefined.` );
+        //     continue;
+
+        // }
+
+        // @ts-ignore
+        const currentValue = material[ key ];
+
+        // if ( currentValue === undefined ) {
+
+        //     console.warn( `THREE.Material: '${ key }' is not a property of THREE.${ material.type }.` );
+        //     continue;
+
+        // }
+
+        if ( currentValue && currentValue.isColor ) {
+
+            currentValue.set( newValue );
+
+        } else if ( ( currentValue && currentValue.isVector3 ) && ( newValue && newValue.isVector3 ) ) {
+
+            currentValue.copy( newValue );
+
+        } else {
+
+            // @ts-ignore
+            material[ key ] = newValue;
+
+        }
+
+    }
+
+};
+
 export class ParticleMeshStandardNodeMaterial extends MeshStandardNodeMaterial {
     uTileCount: number;
     vTileCount: number;
@@ -204,6 +248,12 @@ export class ParticleMeshPhysicalNodeMaterial extends MeshPhysicalNodeMaterial {
     static get type() {
         return 'ParticleMeshPhysicalNodeMaterial';
     }
+
+    setValues( values: any ) {
+
+        setMaterialValues( this, values );
+
+    }
 }
 
 export class ParticleBillboardNodeMaterial extends SpriteNodeMaterial {
@@ -243,6 +293,12 @@ export class ParticleBillboardNodeMaterial extends SpriteNodeMaterial {
         if (parameters?.softParticles) {
             // TODO: implement
         }
+    }
+
+    setValues( values: any ) {
+
+        setMaterialValues( this, values );
+
     }
 }
 
@@ -294,6 +350,12 @@ export class ParticleMeshNodeMaterial extends MeshBasicNodeMaterial {
     static get type() {
         return 'ParticleMeshNodeMaterial';
     }
+
+    setValues( values: any ) {
+
+        setMaterialValues( this, values );
+
+    }
 }
 
 export class TrailNodeMaterial extends LineBasicNodeMaterial {
@@ -327,6 +389,12 @@ export class TrailNodeMaterial extends LineBasicNodeMaterial {
 
     static get type() {
         return 'TrailNodeMaterial';
+    }
+
+    setValues( values: any ) {
+
+        setMaterialValues( this, values );
+
     }
 }
 
