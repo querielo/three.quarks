@@ -35,10 +35,10 @@ export class PointEmitter implements EmitterShape {
 
         p.position.setScalar(0);
         
-        if (p.rotation instanceof Quaternion) {
-            this._m1.lookAt(ZERO_VEC3, p.position, UP_VEC3);
-            p.rotation.setFromRotationMatrix(this._m1);
-        }
+        // if (p.rotation instanceof Quaternion) {
+        //     this._m1.lookAt(ZERO_VEC3, p.position, UP_VEC3);
+        //     p.rotation.setFromRotationMatrix(this._m1);
+        // }
     }
 
     toJSON(): ShapeJSON {

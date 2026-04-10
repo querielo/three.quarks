@@ -1,6 +1,6 @@
 {
-  "name": "three.quarks",
-  "version": "0.16.0",
+  "name": "@querielo/three.quarks",
+  "version": "0.17.10",
   "description": "A General-Purpose Particle System for three.js",
   "type": "module",
   "types": "./dist/types/index.d.ts",
@@ -22,15 +22,16 @@
   "scripts": {
     "type-check": "tsc --noEmit",
     "type-check:watch": "npm run type-check -- --watch",
+    "clean": "rimraf dist tsconfig.tsbuildinfo",
     "dev": "rollup -c -w",
     "build:types": "tsc --emitDeclarationOnly",
     "build:js": "rollup -c",
-    "build:examples": "cpx \"../../node_modules/three/examples/**/*.*\" ./examples/js/examples && cpx ../../node_modules/three/build/three.module.js ./examples/js/",
+  "build:examples": "cpx \"../../node_modules/three/examples/**/*.*\" ./examples/js/examples && cpx ../../node_modules/three/build/three.module.js ./examples/js/ && cpx ../../node_modules/three/build/three.webgpu.js ./examples/js/ && cpx ../../node_modules/three/build/three.core.js ./examples/js/",
     "build:production": "npm run build:types && npm run build:examples && cross-env NODE_ENV=production npm run build:js && cpx ./dist/three.quarks.esm.js ./examples/js/",
     "yalc:publish": "node -e \"const os = require('os'); const { execSync } = require('child_process'); const homedir = os.homedir(); execSync(`yalc publish --store-folder ${homedir}/.yalc`, {stdio: 'inherit'});\"",
     "build": "npm run build:production",
     "lint": "eslint . --ext .ts",
-    "example": "http-server ./examples -c-1 -p 8000",
+    "example": "http-server ./examples -c-1 -p 8005",
     "test": "jest",
     "test:coverage": "jest --coverage",
     "test:prod": "npm run test -- --no-cache",
@@ -56,14 +57,14 @@
   },
   "homepage": "https://quarks.art",
   "peerDependencies": {
-    "three": ">=0.165.0"
+    "three": ">=0.180.0"
   },
   "dependencies": {
     "quarks.core": "^0.16.0"
   },
   "devDependencies": {
     "@types/jest": "^29.5.12",
-    "@types/three": "^0.165.0",
-    "three": "^0.165.0"
+    "@types/three": "^0.180.0",
+    "three": "^0.180.0"
   }
 }

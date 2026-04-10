@@ -62,9 +62,12 @@ export abstract class VFXBatch extends Mesh {
         this.systems = new Set<IParticleSystem>();
         const layers = new Layers();
         layers.mask = settings.layers.mask;
-        const newMat = settings.material.clone();
-        newMat.defines = {};
-        Object.assign(newMat.defines, settings.material.defines);
+    // Clone material and ensure we only access `defines` when material is a ShaderMaterial
+    const newMat = settings.material.clone();
+    const shaderMat = newMat as import('three').ShaderMaterial;
+    const srcMat = settings.material as any;
+    shaderMat.defines = shaderMat.defines || {};
+    if (srcMat.defines) Object.assign(shaderMat.defines, srcMat.defines);
         this.settings = {
             instancingGeometry: settings.instancingGeometry,
             renderMode: settings.renderMode,
@@ -91,11 +94,14 @@ export abstract class VFXBatch extends Mesh {
     }
 
     applyDepthTexture(depthTexture: Texture | null): void {
-        const uniform = (this.material as ShaderMaterial).uniforms['depthTexture'];
-        if (uniform) {
-            if (uniform.value !== depthTexture) {
-                uniform.value = depthTexture;
-                (this.material as ShaderMaterial).needsUpdate = true;
+        const mat = this.material as any;
+        if (mat.depthTexture) {
+            mat.depthTexture.value = depthTexture;
+            mat.needsUpdate = true;
+        } else if (mat.uniforms && mat.uniforms['depthTexture']) {
+            if (mat.uniforms['depthTexture'].value !== depthTexture) {
+                mat.uniforms['depthTexture'].value = depthTexture;
+                mat.needsUpdate = true;
             }
         }
     }

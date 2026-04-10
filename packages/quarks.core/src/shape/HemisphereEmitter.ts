@@ -92,10 +92,10 @@ export class HemisphereEmitter implements EmitterShape {
         p.velocity.copy(p.position).multiplyScalar(p.startSpeed);
         p.position.multiplyScalar(this.radius * rand);
         
-        if (p.rotation instanceof Quaternion) {
-            this._m1.lookAt(ZERO_VEC3, p.position, UP_VEC3);
-            p.rotation.setFromRotationMatrix(this._m1);
-        }
+        // if (p.rotation instanceof Quaternion) {
+        //     this._m1.lookAt(ZERO_VEC3, p.position, UP_VEC3);
+        //     p.rotation.setFromRotationMatrix(this._m1);
+        // }
     }
 
     toJSON(): ShapeJSON {

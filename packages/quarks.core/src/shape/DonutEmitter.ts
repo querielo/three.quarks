@@ -107,10 +107,10 @@ export class DonutEmitter implements EmitterShape {
         //const v = Math.random();
 
         //.multiplyScalar(this.radius);
-        if (p.rotation instanceof Quaternion) {
-            this._m1.lookAt(ZERO_VEC3, p.velocity, UP_VEC3);
-            p.rotation.setFromRotationMatrix(this._m1);
-        }
+        // if (p.rotation instanceof Quaternion) {
+        //     this._m1.lookAt(ZERO_VEC3, p.velocity, UP_VEC3);
+        //     p.rotation.setFromRotationMatrix(this._m1);
+        // }
     }
 
     toJSON(): ShapeJSON {

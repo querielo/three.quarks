@@ -4,7 +4,12 @@ import babel from '@rollup/plugin-babel';
 import terser from '@rollup/plugin-terser';
 import typescript from '@rollup/plugin-typescript';
 import ts from 'typescript';
-import pkg from './package.json' assert {type: 'json'};
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const pkg = JSON.parse(fs.readFileSync(path.resolve(__dirname, './package.json'), 'utf8'));
 
 const date = new Date().toDateString();
 
@@ -15,7 +20,7 @@ const banner = `/**
  */`;
 
 const production = process.env.NODE_ENV === 'production';
-const globals = {three: 'THREE', 'three.quarks': 'THREE.QUARKS'};
+const globals = {'three': 'THREE', 'three/webgpu': 'THREE', 'three.quarks': 'THREE.QUARKS'};
 const extensions = ['.js', '.jsx', '.ts', '.tsx'];
 
 function wgslPlugin() {
@@ -35,7 +40,7 @@ function wgslPlugin() {
 export const lib = {
     main: {
         input: './src/index.ts',
-        external: ['three', 'quarks.core'],
+        external: ['three', 'three/webgpu', 'quarks.core'],
         plugins: [
             //wgslPlugin(),
             nodeResolve({

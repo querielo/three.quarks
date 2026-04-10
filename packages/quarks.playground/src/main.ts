@@ -49,7 +49,7 @@ document.addEventListener('drop', async (event) => {
 
     try {
         const jsonContent = JSON.parse(await file.text());
-        quarksLoader.parse(jsonContent, (obj) => {
+        quarksLoader.parse(jsonContent, (obj: any) => {
             QuarksUtil.addToBatchRenderer(obj, batchedRenderer);
             scene.add(obj);
             QuarksUtil.restart(obj);

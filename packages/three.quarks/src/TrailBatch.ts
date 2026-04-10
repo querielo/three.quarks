@@ -13,6 +13,7 @@ import trail_vert from './shaders/trail_vert.glsl';
 import {VFXBatch, RenderMode} from './VFXBatch';
 import {getMaterialUVChannelName} from './util/ThreeUtil';
 import {VFXBatchSettings} from './BatchedRenderer';
+import { TrailNodeMaterial } from './materials/ParticleNodeMaterials';
 
 /**
  * A VFX batch that render trails in a batch.
@@ -110,11 +111,7 @@ export class TrailBatch extends VFXBatch {
         }
 
         if (this.settings.renderMode === RenderMode.Trail) {
-            this.material = new ShaderMaterial({
-                uniforms: uniforms,
-                defines: defines,
-                vertexShader: trail_vert,
-                fragmentShader: trail_frag,
+            this.material = new TrailNodeMaterial({
                 transparent: this.settings.material.transparent,
                 depthWrite: !this.settings.material.transparent,
                 side: this.settings.material.side,
@@ -124,6 +121,10 @@ export class TrailBatch extends VFXBatch {
                 blendEquation: this.settings.material.blendEquation,
                 premultipliedAlpha: this.settings.material.premultipliedAlpha,
             });
+            // Copy material properties
+            if ((this.settings.material as any).map) {
+                (this.material as any).map = (this.settings.material as any).map;
+            }
         } else {
             throw new Error('render mode unavailable');
         }
